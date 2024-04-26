@@ -1,0 +1,10 @@
+republishers:
+  - topic: "/my_gen3_lite/joint_states"
+    msg_type: "sensor_msgs/JointState"
+    mappings:
+      - field: "position"  # Field from the ROS message
+        mapping_type: "array_of_fields"  # Mapping type for an array of fields
+        out:
+          topic: "/inorbit/custom_data/0"
+          key: "joint_positions"  # Key for the republished data
+

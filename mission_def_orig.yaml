@@ -1,0 +1,59 @@
+apiVersion: v0.1
+kind: MissionDefinition
+metadata:
+  scope: "account/2LxBXQ2qQyL6o2eHH"
+  id: fetch_bottle
+spec:
+  label: Mission name
+  steps: # The sequence of steps to complete the mission
+  - label: "Setup mission data"
+    data:
+      # Sets mission's metadata. Also available through Mission Tracking APIs,
+      # from robot-reported data
+      itemType: "bottle"
+  - label: "Go to pick-up location" #Might use action here, subject to change
+    waypoint:
+      # Navigating to a waypoint, given its coordinates (see Named Waypoint example below)
+      x: 1.10
+      y: 20.98
+      theta: 1.23
+      frameId: "map"
+    timeoutSecs: 300
+  - label: "Wait for the create to reach the dock"
+    waitUntil:
+      # Evaluates an expression and waits until it has a True value
+      expression: getValue("reached_goal_location") == 1
+    completeTask: "Reached Pickup Location"
+  - label: "Wait 5 seconds"
+    # A simple wait
+    timeoutSecs: 5
+  - label: "Kinova Pick Up"
+    runAction:
+      # Runs an action defined in the robot
+      actionId: PublishToKinova
+      arguments:
+        item: "bottle"
+  - label: "Wait for item to be picked"
+    waitUntil:
+      # Evaluates an expression and waits until it has a True value
+      expression: getValue("item_picked") == 1
+    completeTask: "Item Picked Up"
+  - label: "Kinova Pick Up"
+    runAction:
+      # Runs an action defined in the robot
+      actionId: publish-to-kinova
+      arguments:
+        item: "blanket"
+  - label: "Wait for item to be picked"
+    waitUntil:
+      # Evaluates an expression and waits until it has a True value
+      expression: getValue("item_picked") == 1
+    completeTask: "Item Picked Up"
+  - label: "Go to User"
+    # Navigates to a pre-defined, named waypoint
+    runAction:
+      # Runs an action defined in the robot
+      actionId: return-to-base
+      arguments:
+        item: "blanket"
+
